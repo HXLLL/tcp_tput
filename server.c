@@ -26,8 +26,8 @@ int main() {
     // signal(SIGINT, sigint_handler);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    // int reuse_addr_value = 1;
-    // setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 4);
+    int reuse_addr_value = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 4);
 
     struct sockaddr_in server;
     server.sin_addr.s_addr = inet_addr(SERVER_ADDR);
@@ -50,7 +50,7 @@ int main() {
     while (1) {
         char s[20]; int client_size;
         client_size = sizeof(client_addr);
-        if (accept(sockfd, (struct sockaddr*)&client_addr, (socklen_t*)&client_size) < 0) {
+        if ((conn_fd = accept(sockfd, (struct sockaddr*)&client_addr, (socklen_t*)&client_size)) < 0) {
             puts("failed to accept connection");
             printf("Error: %s\n", strerror(errno));
             continue;
@@ -64,6 +64,7 @@ int main() {
             cnt += len;
         }
         write(conn_fd, "OK", 2);
+        printf("transmission done\n");
         close(conn_fd);
         printf("connection done\n");
     }

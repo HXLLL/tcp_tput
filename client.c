@@ -9,6 +9,7 @@
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 
+char buffer[BLK_SIZE];
 int main() {
     int sock_fd;
     sock_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -27,19 +28,21 @@ int main() {
 
     clock_t start = clock();
 
-    char buffer[BLK_SIZE];
     memset(buffer, 'a', sizeof(buffer));
-    for (int i=0;i!=BLK_CNT;++i) {
+    for (long long i=0;i!=BLK_CNT;++i) {
+        if (i*100/BLK_CNT != (i-1)*100/BLK_CNT) {
+            printf("%lld%%\n", i*100/BLK_CNT);
+        }
         write(sock_fd, buffer, BLK_SIZE);
     }
     puts("Transmission done.");
 
     read(sock_fd, buffer, 2);
     if (buffer[0]=='O' && buffer[1]=='K') {
-        double total_time = (clock() - start) / CLOCKS_PER_SEC;
+        double total_time = 1.0 * (clock() - start) / CLOCKS_PER_SEC;
         double tput = 1.0 * BLK_SIZE * BLK_CNT / total_time;
         puts("ACK received.");
-        printf("Throughput: %.3lf\n", tput);
+        printf("Throughput: %.3lf Gbps\n", tput*8/(1ll<<30));
 
     } else {
         puts("ACK error");
