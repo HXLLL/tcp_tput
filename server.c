@@ -32,9 +32,11 @@ int main() {
 
     struct sockaddr_in client_addr;
     while (1) {
-        char s[20]; int client_size;
+        char s[20]; int client_size, client_port;
         int cilentfd = accept(sockfd, (struct sockaddr*)&client_addr, (socklen_t*)&client_size);
-        inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
-        printf("client from %s:%d connected\n", s, client_addr.sin_port);
+        inet_ntop(AF_INET, &client_addr.sin_addr, s, sizeof(client_addr));
+        client_port = ntohs(client_addr.sin_port);
+        printf("client from %s:%d connected\n", s, client_port);
     }
+    
 }
