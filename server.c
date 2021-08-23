@@ -1,7 +1,7 @@
 #include "tcp_tput.h"
 
 int conn_fd[NUM_THREADS], sockfd[NUM_THREADS];
-char buffer[BLK_SIZE]; 
+char buffer[BLK_SIZE+1]; 
 
 void sigint_handler() {
     for (int i=0;i!=NUM_THREADS;++i) {
@@ -21,7 +21,7 @@ void *serve(void *conn_fd_p) {
     while (cnt < BLK_CNT * BLK_SIZE)
     {
         len = read(conn_fd, buffer, BLK_SIZE);
-        // write(STDOUT_FILENO, buffer, len);
+        write(STDOUT_FILENO, buffer, len);
         cnt += len;
     }
     write(conn_fd, "OK", 2);
