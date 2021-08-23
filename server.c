@@ -1,3 +1,5 @@
+#include "tcp_tput.h"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,9 +7,6 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
-
-#define SERVER_ADDR "192.168.2.2"
-#define SERVER_PORT 6666
 
 int main() {
     int sockfd = 0;
