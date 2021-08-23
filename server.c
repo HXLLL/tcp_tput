@@ -36,16 +36,16 @@ int main() {
     for (int i=0;i!=NUM_THREADS;++i) {
         sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
         int reuse_addr_value = 1;
-        setsockopt(sockfd[i], SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 4);
+        setsockopt(sockfd[i], SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 1);
 
         struct ifreq ifr;
 
-        memset(&ifr, 0, sizeof(ifr));
-        snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "enp94s0f0");
-        if (setsockopt(sockfd[i], SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
-            printf("Error: %s\n", strerror(errno));
-            return -1;
-        }
+        // memset(&ifr, 0, sizeof(ifr));
+        // snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "enp94s0f0");
+        // if (setsockopt(sockfd[i], SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
+        //     printf("Error: %s\n", strerror(errno));
+        //     return -1;
+        // }
 
         struct sockaddr_in server;
         server.sin_addr.s_addr = inet_addr(SERVER_ADDR);
@@ -61,14 +61,10 @@ int main() {
         puts("Successfully binded");
 
         listen(sockfd[i], 1);
-    }
-
-
-    struct sockaddr_in client_addr;
-    int worker_cnt=0;
-    for (int i=0;i!=NUM_THREADS;++i) {
         char s[20];
+
         int client_size;
+        struct sockaddr_in client_addr;
         client_size = sizeof(client_addr);
         if ((conn_fd[i] = accept(sockfd[i], (struct sockaddr *)&client_addr, (socklen_t *)&client_size)) < 0)
         {
