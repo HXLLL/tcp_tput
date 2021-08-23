@@ -15,7 +15,7 @@ int main() {
     struct sockaddr_in server;
     server.sin_addr.s_addr = inet_addr(SERVER_ADDR);
     server.sin_family = AF_INET;
-    server.sin_port = SERVER_PORT;
+    server.sin_port = htons(SERVER_PORT);
 
     if (bind(sockfd, (struct sockaddr*)&server, sizeof(server)) < 0) {
         puts("bind failed");
