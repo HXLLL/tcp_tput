@@ -1,18 +1,5 @@
 #include "tcp_tput.h"
 
-#include <net/if.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
-
 int conn_fd[NUM_THREADS], sockfd[NUM_THREADS];
 char buffer[BLK_SIZE]; 
 
@@ -65,8 +52,7 @@ int main() {
         server.sin_family = AF_INET;
         server.sin_port = htons(SERVER_PORT + i);
 
-        if (bind(sockfd[i], (struct sockaddr *)&server, sizeof(server)) < 0)
-        {
+        if (bind(sockfd[i], (struct sockaddr *)&server, sizeof(server)) < 0) {
             puts("bind failed");
             printf("Error: %s\n", strerror(errno));
             return -1;
@@ -95,10 +81,15 @@ int main() {
 
         int *conn_fd_p = malloc(1);
         *conn_fd_p = conn_fd[i];
-        pthread_create(&workers[worker_cnt++], NULL, serve, conn_fd_p);
+        pid_t tid;
+        if ((tid=fork()) == 0) {
+            serve(conn_fd_p);
+            return 0;
+        }
     }
     
     for (int i=0;i!=NUM_THREADS;++i) {
-        pthread_join(workers[i], NULL);
+        int status;
+        wait(&status);
     }
 }

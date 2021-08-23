@@ -1,5 +1,17 @@
 #include "tcp_tput.h"
 
+#include <net/if.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+
 char buffer[BLK_SIZE];
 
 pthread_t workers[NUM_THREADS];
@@ -54,14 +66,10 @@ int main() {
 
         int *conn_fd = malloc(1);
         *conn_fd = sock_fd;
-        if (fork()==0) {
-            flood(conn_fd);
-            return 0;
-        }
+        pthread_create(&workers[i], NULL, flood, conn_fd);
     }
     for (int i=0;i!=NUM_THREADS;++i) {
-        int status;
-        wait(&status);
+        pthread_join(workers[i], NULL);
     }
     double total_time = 1.0 * (clock() - start) / CLOCKS_PER_SEC;
     double tput = NUM_THREADS * BLK_CNT * BLK_SIZE / total_time;
