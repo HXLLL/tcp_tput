@@ -41,8 +41,6 @@ void *serve(void *conn_fd_p) {
     printf("connection done\n");
 }
 
-
-
 int main()
 {
 
