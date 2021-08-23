@@ -1,5 +1,6 @@
 #include "tcp_tput.h"
 
+#include <time.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -22,9 +23,27 @@ int main() {
         return -1;
     }
 
-    char buffer[255];
-    sprintf(buffer, "hello world!\n");
-    send(sock_fd, buffer, strlen(buffer), 0);
+    puts("Successfully connected server.");
+
+    clock_t start = clock();
+
+    char buffer[BLK_SIZE];
+    memset(buffer, 'a', sizeof(buffer));
+    for (int i=0;i!=BLK_CNT;++i) {
+        write(sock_fd, buffer, BLK_SIZE);
+    }
+    puts("Transmission done.");
+
+    read(sock_fd, buffer, 2);
+    if (buffer[0]=='O' && buffer[1]=='K') {
+        double total_time = (clock() - start) / CLOCKS_PER_SEC;
+        double tput = 1.0 * BLK_SIZE * BLK_CNT / total_time;
+        puts("ACK received.");
+        printf("Throughput: %.3lf\n", tput);
+
+    } else {
+        puts("ACK error");
+    }
     close(sock_fd);
     return 0;
 }
