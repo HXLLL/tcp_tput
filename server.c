@@ -21,7 +21,7 @@ void *serve(void *conn_fd_p) {
     while (cnt < BLK_CNT * BLK_SIZE)
     {
         len = read(conn_fd, buffer, BLK_SIZE);
-        write(STDOUT_FILENO, buffer, len);
+        // write(STDOUT_FILENO, buffer, len);
         cnt += len;
     }
     write(conn_fd, "OK", 2);

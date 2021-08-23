@@ -8,7 +8,6 @@ void *flood(void *conn_fd_p) {
     int conn_fd = *(int*)conn_fd_p;
     memset(buffer, 'v', sizeof(buffer));
     for (long long i=0;i!=BLK_CNT;++i) {
-        scanf("%s", buffer);
         if (i*100/BLK_CNT != (i-1)*100/BLK_CNT) {
             printf("thread: %d: %lld%%\n", 0, i*100/BLK_CNT);
         }
