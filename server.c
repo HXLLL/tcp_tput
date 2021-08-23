@@ -30,9 +30,9 @@ int main() {
 
     struct sockaddr_in client_addr;
     while (1) {
-        char s[20];
+        char s[20]; int client_size;
         inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
-        int cilentfd = accept(sockfd, &client_addr, sizeof(client_addr));
+        int cilentfd = accept(sockfd, (struct sockaddr*)&client_addr, (socklen_t*)&client_size);
         printf("client from %s:%d connected", s, client_addr.sin_port);
     }
 }
