@@ -1,5 +1,6 @@
 #include "tcp_tput.h"
 
+#include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -19,6 +20,7 @@ int main() {
 
     if (bind(sockfd, (struct sockaddr*)&server, sizeof(server)) < 0) {
         puts("bind failed");
+        printf("Error: %s\n", strerror(errno));
         return -1;
     }
 
@@ -31,8 +33,8 @@ int main() {
     struct sockaddr_in client_addr;
     while (1) {
         char s[20]; int client_size;
-        inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
         int cilentfd = accept(sockfd, (struct sockaddr*)&client_addr, (socklen_t*)&client_size);
-        printf("client from %s:%d connected", s, client_addr.sin_port);
+        inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
+        printf("client from %s:%d connected\n", s, client_addr.sin_port);
     }
 }
