@@ -34,6 +34,6 @@ int main() {
         char s[20];
         inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
         int cilentfd = accept(sockfd, &client_addr, sizeof(client_addr));
-        printf("client from %s:%d connected"), s, client_addr.sin_port);
+        printf("client from %s:%d connected", s, client_addr.sin_port);
     }
 }
