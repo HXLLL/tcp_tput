@@ -25,5 +25,6 @@ int main() {
     char buffer[255];
     sprintf(buffer, "hello world!\n");
     send(sock_fd, buffer, strlen(buffer), 0);
+    close(sock_fd);
     return 0;
 }

@@ -1,4 +1,5 @@
 APPS	:= client server
+CFLAGS	:= -g3
 
 all: $(APPS)
 

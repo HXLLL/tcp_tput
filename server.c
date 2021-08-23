@@ -37,13 +37,14 @@ int main() {
         inet_ntop(AF_INET, &client_addr, s, sizeof(client_addr));
         printf("client from %s:%d connected\n", s, client_addr.sin_port);
 
-        char buffer[1024]; size_t len;
-        while (len = read(conn_fd, buffer, 1024)) {
+        char buffer[1024]; int len;
+        while ((len = read(conn_fd, buffer, 1024)) > 0) {
             buffer[len] = 0;
-            puts(buffer);
+            printf(buffer);
         }
-        write(conn_fd, "OK", 2);
+        // write(conn_fd, "OK", 2);
         close(conn_fd);
+        printf("connection done\n");
     }
     
 }
