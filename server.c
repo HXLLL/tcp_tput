@@ -21,6 +21,7 @@ void *serve(void *conn_fd_p) {
     while (cnt < BLK_CNT * BLK_SIZE)
     {
         len = read(conn_fd, buffer, BLK_SIZE);
+        // write(STDOUT_FILENO, buffer, len);
         cnt += len;
     }
     write(conn_fd, "OK", 2);
@@ -40,7 +41,7 @@ int main() {
             int reuse_addr_value = 1;
             setsockopt(sockfd[i], SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 1);
 
-            struct ifreq ifr;
+            // struct ifreq ifr;
 
             // memset(&ifr, 0, sizeof(ifr));
             // snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "enp94s0f0");

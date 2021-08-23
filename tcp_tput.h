@@ -18,7 +18,7 @@
 #include <arpa/inet.h>
 
 #define SERVER_ADDR "192.168.2.1"
-#define SERVER_PORT 6664
+#define SERVER_PORT 8888
 
 #define NUM_THREADS 1LL
 
