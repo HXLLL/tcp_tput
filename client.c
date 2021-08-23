@@ -1,5 +1,6 @@
 #include "tcp_tput.h"
 
+#include <net/if.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include <time.h>
@@ -42,6 +43,15 @@ int main() {
     for (int i=0;i!=NUM_THREADS;++i) {
         int sock_fd;
         sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+        struct ifreq ifr;
+
+        memset(&ifr, 0, sizeof(ifr));
+        snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "enp94s0f0");
+        if (setsockopt(sock_fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
+            return -1;
+        }
+
         struct sockaddr_in server;
         server.sin_addr.s_addr = inet_addr(SERVER_ADDR);
         server.sin_family = AF_INET;

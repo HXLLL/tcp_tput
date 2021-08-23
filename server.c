@@ -1,5 +1,6 @@
 #include "tcp_tput.h"
 
+#include <net/if.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -41,8 +42,7 @@ void *serve(void *conn_fd_p) {
     printf("connection done\n");
 }
 
-int main()
-{
+int main() {
 
     signal(SIGINT, sigint_handler);
 
@@ -50,6 +50,15 @@ int main()
         sockfd[i] = socket(AF_INET, SOCK_STREAM, 0);
         int reuse_addr_value = 1;
         setsockopt(sockfd[i], SOL_SOCKET, SO_REUSEADDR, &reuse_addr_value, 4);
+
+        struct ifreq ifr;
+
+        memset(&ifr, 0, sizeof(ifr));
+        snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "enp94s0f0");
+        if (setsockopt(sockfd[i], SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifr, sizeof(ifr)) < 0) {
+            printf("Error: %s\n", strerror(errno));
+            return -1;
+        }
 
         struct sockaddr_in server;
         server.sin_addr.s_addr = inet_addr(SERVER_ADDR);
