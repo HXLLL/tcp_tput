@@ -1,5 +1,8 @@
 {
+    "C_Cpp.default.includePath": ["${workspaceFolder}"],
     "files.associations": {
-        "ip.h": "c"
+        "ip.h": "c",
+        "tcp_tput.h": "c",
+        "unistd.h": "c"
     }
 }
