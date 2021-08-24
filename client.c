@@ -17,9 +17,9 @@ void *flood(void *conn_fd_p) {
 
     read(conn_fd, buffer, 2);
     if (buffer[0]=='O' && buffer[1]=='K') {
-        printf("thread %d: ACK received.", 0);
+        printf("thread %d: ACK received.\n", 0);
     } else {
-        printf("thread %d: ACK error", 0);
+        printf("thread %d: ACK error.\n", 0);
     }
     close(conn_fd);
     free(conn_fd_p);
@@ -27,7 +27,9 @@ void *flood(void *conn_fd_p) {
 }
 
 int main() {
-    clock_t start = clock();
+    struct timespec tv;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    int start=tv.tv_sec + tv.tv_nsec/1e9;
     for (int i=0;i!=NUM_THREADS;++i) {
         if (fork()==0) {
             int sock_fd;
@@ -62,7 +64,10 @@ int main() {
         int status;
         wait(&status);
     }
-    double total_time = 1.0 * (clock() - start) / CLOCKS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &tv);
+    double cur_time=tv.tv_sec+tv.tv_nsec/1e9;
+    double total_time = 1.0 * (cur_time-start);
+    printf("total_time: %.3lf\n", total_time);
     double tput = NUM_THREADS * BLK_CNT * BLK_SIZE / total_time;
     printf("Throughput: %.3lf Gbps\n", tput * 8 / (1ll << 30));
 

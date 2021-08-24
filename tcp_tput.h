@@ -20,9 +20,9 @@
 #define SERVER_ADDR "192.168.2.1"
 #define SERVER_PORT 8888
 
-#define NUM_THREADS 1LL
+#define NUM_THREADS 8LL
 
 #define BLK_SIZE (1LL<<20)
-#define BLK_CNT (1LL<<11)
+#define BLK_CNT (1LL<<15)
 
 #endif
