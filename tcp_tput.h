@@ -22,7 +22,7 @@
 
 #define NUM_THREADS 8LL
 
-#define BLK_SIZE (1LL<<20)
-#define BLK_CNT (1LL<<15)
+#define BLK_SIZE 1450
+#define BLK_CNT (1LL<<25)
 
 #endif
